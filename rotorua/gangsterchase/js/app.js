@@ -197,7 +197,6 @@
       onClick();
     });
     chatMessages?.appendChild(wrap);
-    scrollChatToBottom();
   }
 
   function showDecisionModal() {

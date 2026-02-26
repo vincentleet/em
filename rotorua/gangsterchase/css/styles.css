@@ -303,7 +303,7 @@ body::before {
 
 .message-bubble {
   max-width: 75%;
-  padding: 10px 14px;
+  padding: 7px 9px;
   border-radius: var(--radius-bubble);
   font-size: 0.95rem;
   line-height: 1.4;
@@ -379,7 +379,7 @@ body::before {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 12px 16px;
+  padding: 8px 11px;
   background: var(--wa-received);
   border: 1px solid var(--wa-received-border);
   border-radius: var(--radius-bubble);
@@ -439,7 +439,7 @@ body::before {
   flex-shrink: 0;
 }
 
-.input-emoji, .input-attach, .input-camera, .input-mic {
+.input-emoji {
   background: none;
   border: none;
   padding: 8px;
@@ -462,12 +462,21 @@ body::before {
   box-shadow: var(--shadow-input);
 }
 
-.input-mic {
+.input-voice {
   background: var(--wa-green);
   color: #fff;
+  border: none;
   border-radius: 50%;
   padding: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+}
+
+.input-voice:hover {
+  background: var(--wa-green-dark);
 }
 
 /* Modal */
@@ -564,7 +573,7 @@ body::before {
 .call-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.9);
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -718,7 +727,7 @@ body::before {
   }
 
   .header-back {
-    padding: 4px;
+    padding: 2px;
   }
 
   .header-actions {
@@ -742,8 +751,12 @@ body::before {
     gap: 6px;
   }
 
-  .input-emoji, .input-attach, .input-camera {
+  .input-emoji {
     padding: 6px;
+  }
+
+  .input-voice {
+    padding: 10px;
   }
 
   .input-field {
@@ -751,9 +764,6 @@ body::before {
     font-size: 0.95rem;
   }
 
-  .input-mic {
-    padding: 10px;
-  }
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
