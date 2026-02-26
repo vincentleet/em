@@ -354,7 +354,7 @@
       backTapCount++;
       if (backTapReset) clearTimeout(backTapReset);
       backTapReset = setTimeout(() => { backTapCount = 0; backTapReset = null; }, 5000);
-      if (backTapCount >= 10) {
+      if (backTapCount >= 5) {
         location.reload();
       }
     });
