@@ -39,12 +39,37 @@
     });
   }
 
+  function scrollChatToTop() {
+    requestAnimationFrame(() => {
+      const area = chatScrollArea();
+      if (area) area.scrollTo({ top: 0, behavior: 'instant' });
+    });
+  }
+
   const BUBBLE_SOUND = 'assets/audio/bubble.mp3';
+  let bubbleAudio = null;
+  let audioUnlocked = false;
+
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (Ctx) {
+        const ctx = new Ctx();
+        if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+      }
+      const a = bubbleAudio || (bubbleAudio = new Audio(BUBBLE_SOUND));
+      a.volume = 0.001;
+      a.play().then(() => { a.volume = 0.5; a.pause(); }).catch(() => {});
+    } catch (_) {}
+  }
+
   function playBubbleSound() {
     try {
-      const audio = new Audio(BUBBLE_SOUND);
-      audio.volume = 0.5;
-      audio.play().catch(() => {});
+      const a = new Audio(BUBBLE_SOUND);
+      a.volume = 0.5;
+      a.play().catch(() => {});
     } catch (_) {}
   }
   const startBtn = document.getElementById('start-btn');
@@ -115,7 +140,7 @@
     if (thenRunStep) runStep(thenRunStep);
   }
 
-  function appendMessage(text, from, isRead = false, playSound = true) {
+  function appendMessage(text, from, isRead = false, playSound = true, scrollToBottom = true) {
     const row = document.createElement('div');
     row.className = `message-row ${from === 'player' ? 'sent' : 'received'}`;
     const bubble = document.createElement('div');
@@ -137,10 +162,10 @@
     row.appendChild(bubble);
     chatMessages?.appendChild(row);
     if (playSound) playBubbleSound();
-    scrollChatToBottom();
+    if (scrollToBottom) scrollChatToBottom();
   }
 
-  function appendMissedCall() {
+  function appendMissedCall(scrollToBottom = true) {
     const row = document.createElement('div');
     row.className = 'message-row';
     const bubble = document.createElement('div');
@@ -153,7 +178,7 @@
     `;
     row.appendChild(bubble);
     chatMessages?.appendChild(row);
-    scrollChatToBottom();
+    if (scrollToBottom) scrollChatToBottom();
   }
 
   function appendDateSeparator() {
@@ -167,7 +192,10 @@
     const wrap = document.createElement('div');
     wrap.className = 'message-row reply-btn-row';
     wrap.innerHTML = '<button class="reply-btn">Reply</button>';
-    wrap.querySelector('.reply-btn').addEventListener('click', onClick);
+    wrap.querySelector('.reply-btn').addEventListener('click', () => {
+      unlockAudio();
+      onClick();
+    });
     chatMessages?.appendChild(wrap);
     scrollChatToBottom();
   }
@@ -199,11 +227,12 @@
     if (step.batch) {
       step.batch.forEach((item) => {
         if (item.missedCall) {
-          appendMissedCall();
+          appendMissedCall(false);
         } else if (item.message) {
-          appendMessage(item.message.text, item.message.from, false, false);
+          appendMessage(item.message.text, item.message.from, false, false, false);
         }
       });
+      scrollChatToTop();
       runStep(step.next);
       return;
     }
@@ -298,6 +327,7 @@
 
     startBtn?.addEventListener('click', () => {
       logEvent('start_tapped');
+      unlockAudio();
       showChatScreen();
     });
 
@@ -308,6 +338,7 @@
     });
 
     modalSelect?.addEventListener('click', () => {
+      unlockAudio();
       const selected = decisionForm?.querySelector('input[name="choice"]:checked');
       if (selected) {
         handleChoice(selected.value);
