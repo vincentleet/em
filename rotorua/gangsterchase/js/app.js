@@ -325,7 +325,7 @@
 
     setTimeout(() => {
       showChatScreen();
-    }, 2000);
+    }, 2500);
 
     decisionForm?.querySelectorAll('input[name="choice"]').forEach((radio) => {
       radio.addEventListener('change', () => {
@@ -351,7 +351,7 @@
       backTapCount++;
       if (backTapReset) clearTimeout(backTapReset);
       backTapReset = setTimeout(() => { backTapCount = 0; backTapReset = null; }, 5000);
-      if (backTapCount >= 5) {
+      if (backTapCount >= 3) {
         location.reload();
       }
     });
