@@ -347,14 +347,33 @@
 
     let backTapCount = 0;
     let backTapReset = null;
-    document.querySelector('.header-back')?.addEventListener('click', () => {
-      backTapCount++;
-      if (backTapReset) clearTimeout(backTapReset);
-      backTapReset = setTimeout(() => { backTapCount = 0; backTapReset = null; }, 5000);
-      if (backTapCount >= 3) {
-        location.reload();
-      }
-    });
+    let backLongPressTimer = null;
+
+    function doReset() {
+      location.reload();
+    }
+
+    const backBtn = document.querySelector('.header-back');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        backTapCount++;
+        if (backTapReset) clearTimeout(backTapReset);
+        backTapReset = setTimeout(() => { backTapCount = 0; backTapReset = null; }, 5000);
+        if (backTapCount >= 3) doReset();
+      });
+
+      backBtn.addEventListener('pointerdown', () => {
+        backLongPressTimer = setTimeout(doReset, 1000);
+      });
+      backBtn.addEventListener('pointerup', () => {
+        if (backLongPressTimer) clearTimeout(backLongPressTimer);
+        backLongPressTimer = null;
+      });
+      backBtn.addEventListener('pointerleave', () => {
+        if (backLongPressTimer) clearTimeout(backLongPressTimer);
+        backLongPressTimer = null;
+      });
+    }
   }
 
   if (document.readyState === 'loading') {
