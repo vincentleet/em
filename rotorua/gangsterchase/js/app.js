@@ -3,31 +3,40 @@
  */
 
 (function () {
-  // Apply admin edits from localStorage (if any)
+  function setEditByPath(path, text) {
+    if (typeof CONV === 'undefined') return;
+    if (path.startsWith('j0_batch.batch.')) {
+      const i = parseInt(path.split('.')[2], 10);
+      const obj = CONV.steps.j0_batch?.batch?.[i]?.message;
+      if (obj) obj.text = text;
+    } else {
+      const obj = CONV.steps[path]?.message;
+      if (obj) obj.text = text;
+    }
+  }
+
+  function applyEdits(edits) {
+    if (!edits || typeof edits !== 'object') return;
+    try {
+      Object.entries(edits).forEach(([path, text]) => setEditByPath(path, text));
+    } catch (_) {}
+  }
+
   if (typeof CONV !== 'undefined') {
     try {
       const stored = localStorage.getItem('em_rotorua_conv_edits');
-      if (stored) {
-        const edits = JSON.parse(stored);
-        const setByPath = (path, text) => {
-          if (path.startsWith('j0_batch.batch.')) {
-            const i = parseInt(path.split('.')[2], 10);
-            const obj = CONV.steps.j0_batch?.batch?.[i]?.message;
-            if (obj) obj.text = text;
-          } else {
-            const obj = CONV.steps[path]?.message;
-            if (obj) obj.text = text;
-          }
-        };
-        Object.entries(edits).forEach(([path, text]) => setByPath(path, text));
-      }
+      if (stored) applyEdits(JSON.parse(stored));
     } catch (_) {}
+    fetch('conv-edits.json')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((edits) => { if (edits) applyEdits(edits); })
+      .catch(() => {});
   }
 
   const logEvent = (typeof FirebaseLogger !== 'undefined' && typeof FirebaseLogger.log === 'function')
     ? (...args) => FirebaseLogger.log(...args)
     : () => {};
-  const startScreen = document.getElementById('start-screen');
+  const resetScreen = document.getElementById('reset-screen');
   const chatScreen = document.getElementById('chat-screen');
   const chatMessages = document.getElementById('chat-messages');
   const chatScrollArea = () => chatMessages?.closest('.chat-scroll-area');
@@ -72,7 +81,6 @@
       a.play().catch(() => {});
     } catch (_) {}
   }
-  const startBtn = document.getElementById('start-btn');
   const decisionModal = document.getElementById('decision-modal');
   const decisionForm = document.getElementById('decision-form');
   const modalSelect = document.getElementById('modal-select');
@@ -94,16 +102,8 @@
     return date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }).toUpperCase();
   }
 
-  function setStartScreenTimes() {
-    const now = new Date();
-    document.getElementById('start-date')?.replaceChildren(formatDate(now));
-    const t = formatTime(now);
-    document.getElementById('notif-time-1')?.replaceChildren(t);
-    document.getElementById('notif-time-2')?.replaceChildren(t);
-  }
-
   function showChatScreen() {
-    startScreen?.classList.remove('active');
+    resetScreen?.classList.add('fade-out');
     chatScreen?.classList.add('active');
     updateHeader();
     runStep(CONV.startStep);
@@ -316,7 +316,6 @@
   }
 
   function init() {
-    setStartScreenTimes();
     TypingIndicator.init(chatMessages);
     CallModule.init();
 
@@ -324,11 +323,9 @@
       FirebaseLogger.init?.();
     }
 
-    startBtn?.addEventListener('click', () => {
-      logEvent('start_tapped');
-      unlockAudio();
+    setTimeout(() => {
       showChatScreen();
-    });
+    }, 2000);
 
     decisionForm?.querySelectorAll('input[name="choice"]').forEach((radio) => {
       radio.addEventListener('change', () => {

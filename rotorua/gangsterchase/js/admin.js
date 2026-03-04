@@ -95,22 +95,50 @@
     return div.innerHTML;
   }
 
-  function save() {
+  function collectEdits() {
     const edits = {};
     document.querySelectorAll('.message-row').forEach((row) => {
       const path = row.dataset.path;
       const textarea = row.querySelector('textarea');
-      if (path && textarea) edits[path] = textarea.value.trim();
+      if (path && textarea) {
+        const t = textarea.value.trim();
+        if (t) edits[path] = t;
+      }
     });
+    return edits;
+  }
 
+  function save() {
+    const edits = collectEdits();
     Object.entries(edits).forEach(([path, text]) => setByPath(path, text));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(edits));
-    alert('Saved. Refresh the app to see changes.');
+    alert('Saved to this device. Refresh the app to see changes.');
+  }
+
+  function download() {
+    const edits = collectEdits();
+    const json = JSON.stringify(edits, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'conv-edits.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('Downloaded conv-edits.json. Replace the file in your project directory and deploy.');
   }
 
   function reset() {
     if (!confirm('Reset all messages to default? This will clear your saved edits.')) return;
     localStorage.removeItem(STORAGE_KEY);
+    const blob = new Blob(['{}'], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'conv-edits.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('Reset. Downloaded empty conv-edits.json – replace the file in your project to reset on all devices.');
     location.reload();
   }
 
@@ -127,5 +155,6 @@
   render();
 
   document.getElementById('save-btn').addEventListener('click', save);
+  document.getElementById('download-btn').addEventListener('click', download);
   document.getElementById('reset-btn').addEventListener('click', reset);
 })();

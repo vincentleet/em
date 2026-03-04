@@ -23,7 +23,10 @@
     .btn-save:hover { background: #20BD5A; }
     .btn-reset { background: #eee; color: #333; margin-left: 8px; }
     .btn-reset:hover { background: #ddd; }
+    .btn-download { background: #128C7E; color: #fff; margin-left: 8px; }
+    .btn-download:hover { background: #0e7a6d; }
     .actions { margin-top: 24px; }
+    .help { font-size: 0.85rem; color: #666; margin-top: 12px; max-width: 420px; }
     .to-app { font-size: 0.85rem; margin-top: 16px; }
     .to-app a { color: #25D366; }
   </style>
@@ -32,9 +35,11 @@
   <h1>Edit Messages</h1>
   <div id="admin-form"></div>
   <div class="actions">
-    <button type="button" class="btn btn-save" id="save-btn">Save</button>
+    <button type="button" class="btn btn-save" id="save-btn">Save (this device)</button>
+    <button type="button" class="btn btn-download" id="download-btn">Download conv-edits.json</button>
     <button type="button" class="btn btn-reset" id="reset-btn">Reset to default</button>
   </div>
+  <p class="help">To sync edits to other devices: click &quot;Download conv-edits.json&quot;, replace the file in your project directory, then deploy. All devices will get changes after reload.</p>
   <p class="to-app"><a href="index.html">← Back to app</a></p>
 
   <script src="js/conv.js"></script>
