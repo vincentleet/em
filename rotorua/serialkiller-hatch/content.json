@@ -1,0 +1,97 @@
+{
+  "categories": [
+    {
+      "id": "voice",
+      "name": "Voice Notes",
+      "icon": "🎙"
+    },
+    {
+      "id": "maps",
+      "name": "Maps & Locations",
+      "icon": "🗺"
+    },
+    {
+      "id": "plans",
+      "name": "Plans",
+      "icon": "📋"
+    },
+    {
+      "id": "passwords",
+      "name": "Passwords & Codes",
+      "icon": "🔐"
+    },
+    {
+      "id": "victims",
+      "name": "Victim Notes",
+      "icon": "📝"
+    }
+  ],
+  "documents": [
+    {
+      "id": "vn1",
+      "categoryId": "voice",
+      "title": "Target Observations",
+      "type": "voice",
+      "locked": false,
+      "content": "audio/observations.mp3"
+    },
+    {
+      "id": "vn2",
+      "categoryId": "voice",
+      "title": "Private Journal",
+      "type": "voice",
+      "locked": true,
+      "password": "blood",
+      "content": "audio/journal.mp3"
+    },
+    {
+      "id": "map1",
+      "categoryId": "maps",
+      "title": "Warehouse District",
+      "type": "map",
+      "locked": false,
+      "content": "images/warehouse-map.png"
+    },
+    {
+      "id": "map2",
+      "categoryId": "maps",
+      "title": "Disposal Sites",
+      "type": "map",
+      "locked": false,
+      "content": "images/dumping-ground.png"
+    },
+    {
+      "id": "plan1",
+      "categoryId": "plans",
+      "title": "Next Target",
+      "type": "note",
+      "locked": false,
+      "content": "Tuesday 3pm – back entrance. Park on Oak Street. Bring the usual kit."
+    },
+    {
+      "id": "plan2",
+      "categoryId": "plans",
+      "title": "Timeline",
+      "type": "note",
+      "locked": true,
+      "password": "REDRUM",
+      "content": "Week 1: Recon\nWeek 2: Approach\nWeek 3: Acquisition\nWeek 4: Cleanup"
+    },
+    {
+      "id": "pw1",
+      "categoryId": "passwords",
+      "title": "Vault Codes",
+      "type": "password-list",
+      "locked": false,
+      "content": "Vault A: 4729\nVault B: 1837\nSafe: RED-RUM"
+    },
+    {
+      "id": "vic1",
+      "categoryId": "victims",
+      "title": "Research Notes",
+      "type": "note",
+      "locked": false,
+      "content": "Subject 7 – regular at the diner, Tuesdays and Thursdays. Leaves alone around 9pm."
+    }
+  ]
+}
