@@ -25,7 +25,6 @@ const CONV = {
       id: 'j0_batch',
       threadId: 'jimmy',
       batch: [
-        { message: { text: "Can you find us the code? We found more than we thought we would.", from: 'player' } },
         { message: { text: "Hey u guys in the restaurant yet?", from: 'jimmy' } },
         { message: { text: "Whats going on in there, did you find anything yet", from: 'jimmy' } },
         { message: { text: "Hellooo", from: 'jimmy' } },
